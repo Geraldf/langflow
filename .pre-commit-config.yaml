@@ -18,7 +18,7 @@ repos:
         entry: uv run ruff check
         language: system
         types_or: [python, pyi]
-        args: [--fix]
+        args: []
       - id: ruff-format
         name: ruff format
         entry: uv run ruff format
