@@ -3,8 +3,8 @@ from __future__ import annotations
 import time
 from typing import Any
 
-import httpx
-from msal import ConfidentialClientApplication
+import httpx  # pyright: ignore[reportMissingImports]
+from msal import ConfidentialClientApplication  # pyright: ignore[reportMissingImports]
 
 GRAPH_DEFAULT_SCOPE = "https://graph.microsoft.com/.default"
 
@@ -66,3 +66,18 @@ def create_graph_client(
         "Content-Type": "application/json",
     }
     return httpx.Client(base_url=base_url, headers=headers, timeout=timeout_seconds)
+
+
+def graph_patch(
+    client: httpx.Client,
+    path: str,
+    *,
+    json: Any | None = None,
+    data: Any | None = None,
+    params: dict[str, Any] | None = None,
+) -> httpx.Response:
+    """Convenience helper to perform a PATCH request against Microsoft Graph.
+
+    Example: graph_patch(client, "/users/{id}", json={"displayName": "New"})
+    """
+    return client.patch(path, json=json, data=data, params=params)

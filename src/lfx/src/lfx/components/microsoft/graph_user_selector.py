@@ -2,8 +2,8 @@ from __future__ import annotations
 
 from typing import Any
 
-import pandas as pd
-import requests
+import pandas as pd  # pyright: ignore[reportMissingImports]
+import requests  # pyright: ignore[reportMissingModuleSource]
 
 from lfx.components.microsoft.auth_helper import create_graph_client, get_graph_token
 from lfx.custom.custom_component.component import Component
@@ -20,9 +20,9 @@ class MicrosoftGraphUserSelectorComponent(Component):
     Returns the selected user's details as a DataFrame.
     """
 
-    display_name: str = "Microsoft Graph User Selector"
+    display_name: str = "Get User ID with Microsoft Graph "
     description: str = "Fetch Graph users and select one from a dropdown."
-    icon: str = "Microsoft"
+    icon: str = "user-check"
 
     inputs = [
         MessageTextInput(

@@ -2,9 +2,9 @@ from __future__ import annotations
 
 from typing import Any
 
-import pandas as pd
-from jose import jwt
-from jose.exceptions import JWTError
+import pandas as pd  # pyright: ignore[reportMissingImports]
+from jose import jwt  # pyright: ignore[reportMissingImports, reportMissingModuleSource]
+from jose.exceptions import JWTError  # pyright: ignore[reportMissingImports, reportMissingModuleSource]
 
 from lfx.components.microsoft.auth_helper import get_graph_token
 from lfx.custom.custom_component.component import Component

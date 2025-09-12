@@ -2,8 +2,8 @@ from __future__ import annotations
 
 from typing import Any
 
-import pandas as pd
-import requests
+import pandas as pd  # pyright: ignore[reportMissingImports]
+import requests  # pyright: ignore[reportMissingModuleSource]
 
 from lfx.components.microsoft.auth_helper import create_graph_client, get_graph_token
 from lfx.custom.custom_component.component import Component
@@ -16,9 +16,9 @@ from lfx.template.field.base import Output
 class MicrosoftGraphReadMailsComponent(Component):
     """Simple component to call a Microsoft Graph endpoint using app-only auth."""
 
-    display_name: str = "Microsoft Graph Read Mails"
+    display_name: str = "Read Mails with Microsoft Graph"
     description: str = "Reads mails from a Microsoft Graph endpoint using Client Credentials."
-    icon: str = "Microsoft"
+    icon: str = "mails"
 
     inputs = [
         MessageTextInput(

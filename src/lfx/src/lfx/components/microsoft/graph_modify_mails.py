@@ -5,19 +5,19 @@ from typing import Any
 import pandas as pd  # pyright: ignore[reportMissingImports]
 import requests  # pyright: ignore[reportMissingModuleSource]
 
-from lfx.components.microsoft.auth_helper import create_graph_client, get_graph_token
+from lfx.components.microsoft.auth_helper import create_graph_client, get_graph_token, graph_patch
 from lfx.custom.custom_component.component import Component
-from lfx.io import DropdownInput, MessageTextInput, SecretStrInput
+from lfx.io import DataInput, DropdownInput, MessageTextInput, SecretStrInput
 from lfx.schema.dataframe import DataFrame
 from lfx.template.field.base import Output
 
 
-class MicrosoftGraphComponent(Component):
+class MicrosoftGraphModifyMailsComponent(Component):
     """Simple component to call a Microsoft Graph endpoint using app-only auth."""
 
-    display_name: str = "Microsoft Graph"
-    description: str = "Calls a Microsoft Graph endpoint using Client Credentials."
-    icon: str = "Microsoft"
+    display_name: str = "Modify Mails Category with Microsoft Graph"
+    description: str = "Modify mails category from a Microsoft Graph endpoint using Client Credentials."
+    icon: str = "mail-check"
 
     inputs = [
         MessageTextInput(
@@ -43,24 +43,31 @@ class MicrosoftGraphComponent(Component):
             value="v1.0",
         ),
         MessageTextInput(
-            name="user_id",
+            name="auure_user_id",
             display_name="User ID",
             info="the user id to get the details of",
             value="",
             required=True,
         ),
+        DataInput(
+            name="message_id",
+            display_name="Message ID",
+            info="The input Message ID to operate on.",
+            required=True,
+            input_types=["Data"],
+            is_list=True,
+        ),
         MessageTextInput(
-            name="endpoint_path",
-            display_name="Endpoint Path",
-            info="Relative path, e.g. /users?$top=5",
-            value="/users?$top=5",
-            tool_mode=True,
+            name="category",
+            display_name="please list the category you want to modify",
+            info="the category you want to modify can be a comma separated list",
+            value="",
             required=True,
         ),
     ]
 
     outputs = [
-        Output(name="response", display_name="Response", method="call_graph"),
+        Output(name="mails", display_name="Mails", method="call_graph"),
     ]
 
     def call_graph(self) -> DataFrame:
@@ -70,10 +77,18 @@ class MicrosoftGraphComponent(Component):
             client_id=self.client_id,
             client_secret=self.client_secret,
         )
+
         client = create_graph_client(token["access_token"], base_url=base_url)
 
+        # Extract message ID from Data object
+        message_id = self.message_id.text if hasattr(self.message_id, "text") else str(self.message_id)
+
         try:
-            resp = client.get(self.endpoint_path)
+            resp = graph_patch(
+                client,
+                f"/users/{self.auure_user_id}/messages/{message_id}",
+                json={"categories": self.category.split(",") if "," in self.category else [self.category]},
+            )
             resp.raise_for_status()
             data: Any = resp.json()
 
