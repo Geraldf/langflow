@@ -81,8 +81,8 @@ class MicrosoftGraphModifyMailsComponent(Component):
         client = create_graph_client(token["access_token"], base_url=base_url)
 
         # Extract message ID from Data object
-        message_id = self.message_id.text if hasattr(self.message_id, "text") else str(self.message_id)
-
+        # message_id = self.message_id.text if hasattr(self.message_id, "text") else str(self.message_id)
+        message_id = self.message_id[0].data["id"]
         try:
             resp = graph_patch(
                 client,
